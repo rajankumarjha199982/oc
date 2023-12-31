@@ -1,0 +1,27 @@
+{
+    "version": 2,
+    "builds": [
+      {
+        "src": "src/server.js",
+        "use": "@vercel/node"
+      }
+    ],
+    "routes": [
+      {
+        "src": "/(.*)",
+        "dest": "/src/server.js"
+      }
+    ],
+    "env": {
+      "MONGODB_URI": "mongodb+srv://Rajankumarjha:Rajan123@cluster0.qyv0hka.mongodb.net/OptionChain?retryWrites=true&w=majority",
+      "SESSION_SECRET": "Rajanjha7948rajan78swa",
+      "GMAIL_USER": "futureview202324@gmail.com",
+      "GMAIL_PASS": "yqvzsymuuioqsjpl",
+      "BASE_URL": "https://futureview.vercel.app"
+    },
+    "build": {
+      "env": {
+        "NODE_ENV": "production"
+      }
+    }
+  }

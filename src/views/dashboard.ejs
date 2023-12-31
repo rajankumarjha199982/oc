@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Future View</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 100vh;
+            background: linear-gradient(to right, #3498db, #6e45e2);
+            color: #fff;
+        }
+
+        #loadingScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, #3498db, #6e45e2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 1;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .loading-spinner {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        main {
+            text-align: center;
+            margin-bottom: auto;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        h1 {
+            color: #05143d;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .logout-button {
+            background-color: #3498db;
+            color: #fff;
+            padding: 12px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            width: 100%;
+            text-align: center;
+        }
+
+        .logout-button:hover {
+            background-color: #2980b9;
+        }
+
+        footer {
+            text-align: center;
+            padding: 0em 0;
+            color: #fff;
+            width: 100%;
+            position: relative;
+            bottom: 0;
+        }
+
+        .sidebar {
+            height: 100vh;
+            width: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #2b53c0;
+            overflow-x: hidden;
+            transition: 0.5s;
+            padding-top: 60px;
+            color: #fff;
+        }
+
+        .sidebar a {
+            padding: 8px 8px 8px 32px;
+            text-decoration: none;
+            font-size: 18px;
+            color: #fffbff;
+            display: block;
+            transition: 0.3s;
+        }
+
+        h2 {
+            padding: 8px 8px 8px 32px;
+            text-decoration: none;
+            font-size: 30px;
+            color: #42e7ec;
+            display: block;
+            transition: 0.3s;
+        }
+
+        .sidebar a:hover {
+            color: #f1f1f1;
+        }
+
+        .sidebar .close-btn {
+            position: absolute;
+            top: 0;
+            right: 25px;
+            font-size: 36px;
+            margin-left: 50px;
+        }
+
+        .toggle-sidebar-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 24px;
+            color: #fff;
+        }
+        /*  */
+        /* */
+        .user-profile {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .profile-pic {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .mini-profile-pic {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .default-profile-pic {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-right: 10px;
+            background-color: #ccc;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(51, 119, 207, 0.4);
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: #2b53c0;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            color: #fff;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #fff;
+        }
+
+        .upload-form {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .upload-form label {
+            color: #42e7ec;
+            font-size: 18px;
+            margin-right: 10px;
+        }
+
+        .upload-form input[type="file"] {
+            background-color: #2b53c0;
+            color: #fff;
+            padding: 8px;
+            border: none;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .upload-form button {
+            background-color: #42e7ec;
+            color: #fff;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .upload-form button:hover {
+            background-color: #3498db;
+        }
+
+        a {
+            color: #fff;
+        }
+
+        footer {
+            text-align: center;
+            padding: 0em 0;
+            color: #fff;
+            width: 100%;
+            position: relative;
+            bottom: 0;
+        }
+
+
+    </style>
+</head>
+
+<body>
+    <div id="loadingScreen">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <button class="toggle-sidebar-btn" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <div class="sidebar" id="sidebar">
+        <h2>Future View</h2>
+        <a href="javascript:void(0)" class="close-btn" onclick="closeSidebar()">&times;</a>
+        <a href="/api/optionchain/nifty?dateTime=5000000000000000000000">Historical OC</a>
+        <a href="/api/hoc/symbol=NIFTY?exp=21-Dec-2023&time=50000000000000000000000">Live OC</a>
+        <a href="/index">Index Page</a>
+        <a href="/profile">Profile Page</a>
+
+        <form class="logout-form" action="/logout" method="POST">
+            <input type="hidden" name="_method" value="DELETE">
+            <button class="logout-button" type="submit">Logout</button>
+        </form>
+    </div>
+
+    <main id="main">
+        <h1>Option Chain Coming Soon.........</h1>
+        <p> <span id="currentTime"></span></p>
+    </main>
+
+    <!-- User profile button with profile picture -->
+    <div class="user-profile" onclick="openProfileModal()">
+        <img src="/profile/profile-pic/<%= user._id %>" alt="Pp" id="profilePic" class="mini-profile-pic">
+    </div>
+
+    <!-- Profile Modal -->
+    <div id="profileModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeProfileModal()">&times;</span>
+            <h2>Welcome <%= user.name %></h2>
+            <img src="/profile/profile-pic/<%= user._id %>" alt="Pp" id="profilePic" class="mini-profile-pic">
+            <p>Name: <%= user.name %></p>
+            <p>Email: <%= user.email %></p>
+            <a href="/Profile">Go to Profile</a>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2023 Future View (Rajan Kumar Jha). All rights reserved</p>
+    </footer>
+
+    <script>
+        function toggleSidebar() {
+            var sidebar = document.getElementById("sidebar");
+            if (sidebar.style.width === "250px") {
+                sidebar.style.width = "0";
+            } else {
+                sidebar.style.width = "250px";
+            }
+        }
+
+        function closeSidebar() {
+            document.getElementById("sidebar").style.width = "0";
+        }
+
+        function openProfileModal() {
+            document.getElementById("profileModal").style.display = "block";
+        }
+
+        function closeProfileModal() {
+            document.getElementById("profileModal").style.display = "none";
+        }
+
+        window.onclick = function (event) {
+            if (event.target === document.getElementById("profileModal")) {
+                closeProfileModal();
+            }
+        };
+
+        window.addEventListener("load", function () {
+            document.getElementById("loadingScreen").style.opacity = 0;
+            setTimeout(function () {
+                document.getElementById("loadingScreen").style.display = "none";
+                document.getElementById("main").style.opacity = 1;
+            }, 500);
+        });
+    </script>
+    <script>
+        function toggleSidebar() {
+            var sidebar = document.getElementById("sidebar");
+            if (sidebar.style.width === "250px") {
+                sidebar.style.width = "0";
+            } else {
+                sidebar.style.width = "250px";
+            }
+        }
+
+        function closeSidebar() {
+            document.getElementById("sidebar").style.width = "0";
+        }
+
+        function openProfileModal() {
+            document.getElementById("profileModal").style.display = "block";
+        }
+
+        function closeProfileModal() {
+            document.getElementById("profileModal").style.display = "none";
+        }
+
+        function updateCurrentTime() {
+            var currentTimeElement = document.getElementById("currentTime");
+            var now = new Date();
+            var hours = now.getHours();
+            var minutes = now.getMinutes();
+            var seconds = now.getSeconds();
+            var ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12; // 12 hour /24 hour
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            seconds = seconds < 10 ? '0' + seconds : seconds;
+            var timeString = hours + ':' + minutes + ':' + seconds + ' ' + ampm;
+            currentTimeElement.textContent = timeString;
+        }
+
+        window.onclick = function (event) {
+            if (event.target === document.getElementById("profileModal")) {
+                closeProfileModal();
+            }
+        };
+
+        window.addEventListener("load", function () {
+            document.getElementById("loadingScreen").style.opacity = 0;
+            setTimeout(function () {
+                document.getElementById("loadingScreen").style.display = "none";
+                document.getElementById("main").style.opacity = 1;
+            }, 500);
+        });
+
+        setInterval(updateCurrentTime, 1000);
+        updateCurrentTime();
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+
+</html>

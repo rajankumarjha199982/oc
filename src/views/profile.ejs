@@ -1,0 +1,362 @@
+<!-- views/profile.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Future View - <%= user.name %></title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400&display=swap">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(to right, #3498db, #6e45e2);
+            color: #fff;
+        }
+
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            box-sizing: border-box;
+            text-align: center;
+            margin: auto;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            opacity: 1;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        h2, h3 {
+            color: #2b53c0;
+        }
+
+        p {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 16px;
+            color: #333;
+        }
+
+        .cropper-container {
+            max-width: 200px;
+            margin: auto;
+            overflow: hidden;
+            border-radius: 50%;
+            margin-bottom: 1.5rem;
+        }
+
+        #profilePic {
+            max-width: 100%;
+            height: auto;
+            border-radius: 50%;
+        }
+
+        .profile-pic-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #333;
+            background-color: #f3f3f3;
+            border-radius: 50%;
+            cursor: pointer;
+            height: 100%;
+        }
+
+        input[type="file"] {
+            margin-top: 1rem;
+            margin-bottom: 1.5rem;
+            display: none;
+        }
+
+        form {
+            margin-top: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        label {
+            color: #333;
+            margin-bottom: 0.5rem;
+            text-align: left;
+            width: 100%;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="email"] {
+            width: 100%;
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        button {
+            background-color: #3498db;
+            color: #fff;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        a {
+            display: block;
+            margin-top: 1rem;
+            color: #044fa3;
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: #4b88e4;
+        }
+
+        .message {
+            margin-top: 1rem;
+            padding: 0.5rem;
+            border-radius: 4px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .verification-status {
+            margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .verified {
+            color: #28a745;
+        }
+
+        .not-verified {
+            color: #dc3545;
+        }
+
+        footer {
+            text-align: center;
+            padding: 0em 0;
+            color: #fff;
+        }
+
+        footer p {
+            color: #fff;
+        }
+
+        h1 {
+           color: #f3f3f3;
+        }
+
+        #loadingScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, #3498db, #6e45e2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 1;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .loading-spinner {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+    </style>
+</head>
+
+<body>
+    <div id="loadingScreen">
+        <div class="loading-spinner"></div>
+    </div>
+
+        <h1>User Profile</h1>
+    <div class="container">
+        <% if (error.length > 0) { %>
+            <div class="message error"><%= error[0] %></div>
+        <% } %>
+        <% if (success.length > 0) { %>
+            <div class="message success"><%= success[0] %></div>
+        <% } %>
+
+        <h2>Welcome, <%= user.name %></h2>
+        <p>Email: <%= user.email %></p>
+
+        <% if (user.profilePic && user.profilePic.data) { %>
+            <div class="cropper-container">
+                <img src="/profile/profile-pic/<%= user._id %>" alt="Profile Picture" id="profilePic">
+                <div class="profile-pic-placeholder" onclick="document.getElementById('uploadProfilePic').click();">
+                    <i class="fas fa-camera"></i>
+                </div>
+            </div>
+        <% } else { %>
+            <div class="cropper-container">
+                <div class="profile-pic-placeholder" onclick="document.getElementById('uploadProfilePic').click();">
+                    <i class="fas fa-camera"></i>
+                </div>
+            </div>
+        <% } %>
+
+        <form action="/profile/update-profile-pic" method="post" enctype="multipart/form-data">
+            <input type="file" id="uploadProfilePic" name="profilePic" accept="image/*">
+            <button type="submit">Update Profile Picture</button>
+        </form>
+
+        <% if (user.profilePic && user.profilePic.data) { %>
+            <form action="/profile/remove-profile-pic" method="post">
+                <button type="submit">Remove Profile Picture</button>
+            </form>
+        <% } %>
+
+        <h3>Edit Name</h3>
+        <form action="/profile/update" method="post">
+            <label for="name">New Name:</label>
+            <input type="text" id="name" name="name" value="<%= user.name %>" required>
+            <button type="submit">Update Name</button>
+        </form>
+
+        <h3>Change Password</h3>
+        <form action="/profile/change-password" method="post">
+            <label for="oldPassword">Old Password:</label>
+            <input type="password" id="oldPassword" name="oldPassword" required>
+            <label for="newPassword">New Password:</label>
+            <input type="password" id="newPassword" name="newPassword" required>
+            <label for="confirmNewPassword">Confirm New Password:</label>
+            <input type="password" id="confirmNewPassword" name="confirmNewPassword" required>
+            <button type="submit">Change Password</button>
+        </form>
+
+        <h3>Edit Email</h3>
+        <form action="/profile/update" method="post">
+            <label for="email">New Email:</label>
+            <input type="email" id="email" name="email" value="<%= user.email %>" required>
+            <button type="submit">Update Email</button>
+        </form>
+        <form action="/profile/send-verification" method="get">
+            <button type="submit">Send Verification Email</button>
+        </form>
+
+        <form class="logout-form" action="/logout" method="POST">
+            <input type="hidden" name="_method" value="DELETE" >
+            <button class="logout-button" type="submit">Logout</button>
+        </form>
+        <!-------------<a href="/logout" onclick="return confirm('Are you sure you want to logout?');">Logout</a>--------->
+        <a href="/">Home</a>
+        
+    </div>
+
+    <footer>
+        <p>&copy; 2023 Future View (Rajan Kumar Jha). All rights reserved</p>
+    </footer>
+    
+    <script>
+                function goBack() {
+            window.history.back();
+        }
+        
+        window.addEventListener("load", function () {
+            document.getElementById("loadingScreen").style.opacity = 0;
+            setTimeout(function () {
+                document.getElementById("loadingScreen").style.display = "none";
+                document.getElementById("main").style.opacity = 1;
+            }, 500);
+        });
+
+    </script>
+    <script>
+        const profilePic = document.getElementById('profilePic');
+        const uploadProfilePic = document.getElementById('uploadProfilePic');
+
+        uploadProfilePic.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = (event) => {
+                    profilePic.src = event.target.result;
+
+                    const cropper = new Cropper(profilePic, {
+                        aspectRatio: 1,
+                        viewMode: 1,
+                        dragMode: 'move',
+                        rotatable: false,
+                        scalable: false,
+                        zoomable: false,
+                        autoCropArea: 1,
+                    });
+
+                    cropper.getCroppedCanvas().toBlob((blob) => {
+                        const formData = new FormData();
+                        formData.append('profilePic', blob, 'profilePic.jpg');
+
+                        fetch('/profile/update-profile-pic', {
+                            method: 'POST',
+                            body: formData,
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log(data);
+                        })
+                        .catch(error => {
+                            console.error('Error updating profile picture:', error);
+                        });
+                    });
+                };
+
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+</body>
+
+</html>

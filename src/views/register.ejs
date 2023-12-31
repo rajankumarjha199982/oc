@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Future View - Register</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400&display=swap">
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(to right, #3498db, #6e45e2);
+        }
+
+        #loadingScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, #3498db, #6e45e2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 1;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .loading-spinner {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        main {
+            max-width: 600px;
+            width: 100%;
+            box-sizing: border-box;
+            text-align: center;
+            margin: auto;
+            margin-bottom: auto;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+            text-align: left;
+        }
+
+        input {
+            width: calc(100% - 20px);
+            padding: 12px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            font-size: 16px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            outline: none;
+            text-align: center;
+        }
+
+        input:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
+        }
+
+        button {
+            background-color: #3498db;
+            color: #fff;
+            padding: 12px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            display: inline-block;
+            transition: background 0.3s;
+            text-decoration: none;
+            margin-top: 20px;
+            pointer-events: none;
+        }
+
+        button.enabled {
+            background-color: #2980b9;
+            pointer-events: auto;
+        }
+
+        h1 {
+            color: #2b53c0;
+        }
+
+        .flash-message {
+            color: #ff0000;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .flash-message-success {
+            color: #008000;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .password-container {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #555;
+            font-size: 20px;
+        }
+
+        .link {
+            display: block;
+            text-align: center;
+            margin-top: 16px;
+            color: #3498db;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .link:hover {
+            text-decoration: underline;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            margin-top: 16px;
+        }
+
+        .checkbox {
+            display: none;
+        }
+
+        .custom-checkbox {
+            position: relative;
+            padding-left: 28px;
+            cursor: pointer;
+            font-size: 16px;
+            user-select: none;
+        }
+
+        .custom-checkbox input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+
+        .checkmark {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 25px;
+            width: 25px;
+            background-color: #eee;
+            border-radius: 5px;
+        }
+
+        .custom-checkbox:hover input ~ .checkmark {
+            background-color: #ccc;
+        }
+
+        .custom-checkbox input:checked ~ .checkmark {
+            background-color: #2196F3;
+        }
+
+        .checkmark:after {
+            content: "";
+            position: absolute;
+            display: none;
+        }
+
+        .custom-checkbox input:checked ~ .checkmark:after {
+            display: block;
+        }
+
+        .custom-checkbox .checkmark:after {
+            left: 10px;
+            top: 5px;
+            width: 5px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 3px 3px 0;
+            transform: rotate(45deg);
+        }
+
+        .terms-label {
+            margin-left: 5px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 0em 0;
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="loadingScreen">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <main id="main">
+        <% if (messages.error) { %>
+            <p class="flash-message"><%= messages.error %></p>
+        <% } else if (messages.success) { %>
+            <p class="flash-message-success"><%= messages.success %></p>
+        <% } %>
+        <h1>Create Your Future View Account</h1>
+
+        <form action="/register" method="post" onsubmit="return validateForm()">
+            <label for="name">Full Name:</label>
+            <input type="text" id="name" name="name" required aria-required="true" aria-label="Full Name">
+
+            <label for="email">Email:</label>
+            <input type="text" id="email" name="email" required aria-required="true" aria-label="Email">
+
+            <label for="password">Password:</label>
+            <div class="password-container">
+                <input type="password" id="password" name="password" required aria-required="true" aria-label="Password">
+                <span class="toggle-password" onclick="togglePasswordVisibility()">&#128065;</span>
+            </div>
+
+            <div class="checkbox-container">
+                <label class="custom-checkbox">
+                    <input type="checkbox" id="termsCheckbox" class="checkbox">
+                    <span class="checkmark"></span>
+                </label>
+                <span class="terms-label">I agree to the <a href="/terms-of-service">Terms of Service</a> and <a href="/privacy-policy">Privacy Policy</a></span>
+            </div>
+
+            <button type="submit" id="registerButton" class="enabled">Register</button>
+
+            <a href="/login" class="link">Already have an account? Log in</a>
+        </form>
+    </main>
+
+    <footer>
+        <p>&copy; 2023 Future View (Rajan Kumar Jha). All rights reserved</p>
+    </footer>
+
+    <script>
+        function togglePasswordVisibility() {
+            const passwordInput = document.getElementById("password");
+            const toggleIcon = document.querySelector(".toggle-password");
+
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                toggleIcon.innerHTML = "&#128064;";
+            } else {
+                passwordInput.type = "password";
+                toggleIcon.innerHTML = "&#128065;";
+            }
+        }
+
+        function validateForm() {
+            var name = document.getElementById("name").value;
+            var email = document.getElementById("email").value;
+            var password = document.getElementById("password").value;
+            var termsCheckbox = document.getElementById("termsCheckbox");
+
+            if (name === "" || email === "" || password === "") {
+                alert("All fields are required.");
+                return false;
+            }
+
+            if (!termsCheckbox.checked) {
+                alert("Please agree to the Terms of Service and Privacy Policy.");
+                return false;
+            }
+
+
+            return true;
+        }
+
+        document.getElementById("password").addEventListener("input", function () {
+            document.getElementById("registerButton").classList.toggle("enabled", this.value.trim() !== "");
+        });
+
+        window.addEventListener("load", function () {
+            document.getElementById("loadingScreen").style.opacity = 0;
+            setTimeout(function () {
+                document.getElementById("loadingScreen").style.display = "none";
+                document.getElementById("main").style.opacity = 1;
+            }, 500);
+        });
+    </script>
+</body>
+
+</html>

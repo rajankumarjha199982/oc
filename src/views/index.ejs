@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Future View - <%= user.name %></title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400&display=swap">
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(to right, #3498db, #6e45e2);
+            color: #fff;
+        }
+
+        header {
+            background-color: #2b53c0;
+            color: #fff;
+            text-align: center;
+            padding: 1em 0;
+            width: 100%;
+        }
+
+        nav {
+            background-color: #333;
+            color: #fff;
+            padding: 1em;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        main {
+            text-align: center;
+            margin-bottom: auto;
+            padding: 20px;
+            box-sizing: border-box;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        footer {
+            text-align: center;
+            padding: 0em 0;
+            color: #fff;
+            width: 100%;
+            position: relative;
+            bottom: 0;
+            background-color: #2b53c0;
+        }
+
+        #loadingScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, #3498db, #6e45e2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 1;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .loading-spinner {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="loadingScreen">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <header>
+        <h1>Welcome <%= user.name %></h1>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/Profile">Change Profile Pic</a></li>
+            <li><a href="/Profile">Change Name</a></li>
+            <li><a href="/Profile">Change Email</a></li>
+            <li><a href="/Profile">Resat Password</a></li>
+            <li>
+                <form class="logout-form" action="/logout" method="POST">
+                    <input type="hidden" name="_method" value="DELETE" >
+                    <button class="logout-button" type="submit">Logout</button>
+                </form>
+            </li>
+        </ul>
+    </nav>
+
+    <main id="main">
+        <p>This is the home page content.</p>
+    </main>
+
+    <footer>
+        <p>&copy; 2023 Future View (Rajan Kumar Jha). All rights reserved</p>
+    </footer>
+
+    <script>
+        window.addEventListener("load", function () {
+            document.getElementById("loadingScreen").style.opacity = 0;
+            setTimeout(function () {
+                document.getElementById("loadingScreen").style.display = "none";
+                document.getElementById("main").style.opacity = 1;
+            }, 500);
+        });
+    </script>
+</body>
+
+</html>

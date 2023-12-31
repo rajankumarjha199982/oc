@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Future View - Terms of Service</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400&display=swap">
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(to right, #3498db, #6e45e2);
+            color: #fff;
+        }
+
+        #loadingScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, #3498db, #6e45e2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 1;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .loading-spinner {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        main {
+            max-width: 600px;
+            width: 100%;
+            box-sizing: border-box;
+            text-align: center;
+            margin: auto;
+            margin-bottom: auto;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        h1 {
+            color: #2b53c0;
+        }
+
+        h2 {
+            color: #03052c;
+        }
+
+        p {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 16px;
+            color: #0f042b;
+        }
+
+        footer {
+            text-align: center;
+            padding: 0em 0;
+            color: #fff;
+        }
+
+        footer p {
+            color: #fff;
+        }
+
+        .back-button {
+            background-color: #3498db;
+            color: #fff;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+        }
+
+        .back-button:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="loadingScreen">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <main id="main">
+        <h1>Terms of Service</h1>
+
+        <p>These Terms of Service ("Terms") govern your use of the Future View website and services. By accessing or using our services, you agree to be bound by these Terms.</p>
+
+        <h2>Use of Our Services</h2>
+        <p>You must follow any policies made available to you within our services. Do not misuse our services, and only use them as permitted by law and in compliance with these Terms.</p>
+
+        <h2>Privacy</h2>
+        <p>Your use of our services is also governed by our Privacy Policy. Please review our Privacy Policy to understand how we collect, use, and protect your personal information.</p>
+
+        <h2>Changes to These Terms</h2>
+        <p>We may update these Terms from time to time. We will notify you of any changes by posting the new Terms on this page.</p>
+        <button class="back-button" onclick="goBack()">Back</button>
+    </main>
+
+    <footer>
+        <p>&copy; 2023 Future View (Rajan Kumar Jha). All rights reserved</p>
+    </footer>
+
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+
+        window.addEventListener("load", function () {
+            document.getElementById("loadingScreen").style.opacity = 0;
+            setTimeout(function () {
+                document.getElementById("loadingScreen").style.display = "none";
+                document.getElementById("main").style.opacity = 1;
+            }, 500);
+        });
+    </script>
+</body>
+
+</html>
